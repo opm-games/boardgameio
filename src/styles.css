@@ -1,0 +1,28 @@
+.card,
+.slot {
+	border: 1px solid #555;
+	width: 50px;
+	height: 80px;
+	text-align: center;
+	border-radius: 5px;
+}
+.p-absolute {
+	position: relative;
+}
+.p-relative {
+	position: relative;
+}
+
+.slot {
+	margin-right: 5px;
+}
+
+.player-slots {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.bold {
+	font-weight: bold;
+}
