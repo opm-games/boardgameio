@@ -10,13 +10,13 @@ const PlaceValuesClient = Client({
 	game: PlaceValues,
 	board: PlaceValuesBoard,
 	numPlayers: 2,
-	multiplayer: SocketIO({ server: "localhost:8000" }),
+	multiplayer: SocketIO({ server: "localhost:8080" }),
 });
 
 const App = () => (
-	<Fragment>
+	<div>
 		<PlaceValuesClient playerID="0" />
-	</Fragment>
+	</div>
 );
 
 export default App;

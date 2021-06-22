@@ -3,4 +3,4 @@ const { PlaceValues } = require("./Game.js");
 
 const server = Server({ games: [PlaceValues] });
 
-server.run(8000);
+server.run(8080);
