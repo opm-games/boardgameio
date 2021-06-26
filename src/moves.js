@@ -10,11 +10,11 @@ export function addToPlace(G, ctx, playerId, slotIndex) {
 	if (
 		playerId !== ctx.currentPlayer ||
 		slotIndex + 1 > placeValueSlots ||
-		!!G.hands[ctx.currentPlayer][slotIndex]
+		!!G.players[ctx.currentPlayer][slotIndex]
 	) {
 		return INVALID_MOVE;
 	}
-	G.hands[ctx.currentPlayer][slotIndex] = G.currentCard;
+	G.players[ctx.currentPlayer][slotIndex] = G.currentCard;
 
 	G.currentCard = null;
 	ctx.events.endTurn();

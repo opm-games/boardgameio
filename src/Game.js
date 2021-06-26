@@ -1,22 +1,29 @@
 import { drawCard, addToPlace } from "./moves";
 import { placeValueSlots } from "./constants";
+import { PlayerView } from "boardgame.io/core";
 
 export const PlaceValues = {
-	setup: (ctx) => ({
-		deck: shuffle(getDeck()),
-		hands: getHands(ctx),
-		currentCard: null,
-	}),
-
+	setup: (ctx) => {
+		const G = {
+			deck: shuffle(getDeck()),
+			currentCard: null,
+			players: getHands(ctx),
+			currentCard: {},
+		};
+		return G;
+	},
+	playerView: (G, ctx, playerId) => {
+		return { currentCard: G.currentCard, players: { [playerId]: G.players[playerId] } };
+	},
 	endIf: (G) => {
-		const isEnd = Object.values(G.hands).every((hand) => {
+		const isEnd = Object.values(G.players).every((hand) => {
 			return hand.every((position) => {
 				return !!position;
 			});
 		});
 		if (isEnd) {
-			const totals = Object.keys(G.hands).map((id) => {
-				const hand = G.hands[id];
+			const totals = Object.keys(G.players).map((id) => {
+				const hand = G.players[id];
 				let total = 0;
 				let placeValue = "1";
 				for (let i = hand.length - 1; i >= 0; i--) {
@@ -43,7 +50,12 @@ export const PlaceValues = {
 		}
 	},
 
-	moves: { drawCard },
+	moves: {
+		drawCard: {
+			move: drawCard,
+			client: false,
+		},
+	},
 
 	turn: {
 		activePlayers: { stage: "drawCard" },

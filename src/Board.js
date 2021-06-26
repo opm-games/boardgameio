@@ -1,5 +1,4 @@
 import React from "react";
-import { placeValueSlots } from "./constants";
 import Card from "./Card";
 import suits from "./res/images";
 import "./styles.css";
@@ -47,20 +46,21 @@ export class PlaceValuesBoard extends React.Component {
 
 	getPlayers() {
 		const players = [];
-		const playOrder = this.props.ctx.playOrder;
-		playOrder.forEach((playerId) => {
+
+		Object.entries(this.props.G.players).forEach(([playerId, playerCards]) => {
 			const playerSlots = [];
-			for (let slotI = 0; slotI < placeValueSlots; slotI++) {
-				const cardAtSlot = this.props.G.hands[playerId][slotI];
+			for (let slotI = 0; slotI < playerCards.length; slotI++) {
+				const cardAtSlot = this.props.G.players[playerId][slotI];
 				playerSlots.push(
 					<Card
+						keyId={slotI}
 						suit={this.getSVGForSuit(cardAtSlot && cardAtSlot.suit)}
 						value={cardAtSlot && cardAtSlot.value}
 						onClickCallback={() => this.onPlaceCard(playerId, slotI)}
 					/>
 				);
 			}
-			players.push(playerSlots);
+			players.push({ id: playerId, playerSlots });
 		});
 		return players;
 	}
@@ -98,11 +98,11 @@ export class PlaceValuesBoard extends React.Component {
 				{/* player area */}
 
 				<div>
-					{players.map((player, i) => {
+					{players.map((player) => {
 						return (
-							<div key={i} className="player-slots">
-								<div style={{ marginRight: "5px" }}>Player: {i}</div>
-								{player}
+							<div key={player.id} className="player-slots">
+								<div style={{ marginRight: "5px" }}>Player: {player.id}</div>
+								{player.playerSlots}
 							</div>
 						);
 					})}

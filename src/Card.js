@@ -1,8 +1,8 @@
 import react from "react";
 
-export default function Card({ hidden, suit, value, onClickCallback, display, key }) {
+export default function Card({ hidden, suit, value, onClickCallback, display, keyId }) {
 	return (
-		<div key={key} className="slot" onClick={onClickCallback}>
+		<div key={keyId} className="slot" onClick={onClickCallback}>
 			<span>
 				{value && value}
 				<img src={suit && suit}></img>
