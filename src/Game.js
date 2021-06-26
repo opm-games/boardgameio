@@ -8,7 +8,6 @@ export const PlaceValues = {
 			deck: shuffle(getDeck()),
 			currentCard: null,
 			players: getHands(ctx),
-			currentCard: {},
 		};
 		return G;
 	},
