@@ -14,8 +14,16 @@ export function addToPlace(G, ctx, playerId, slotIndex) {
 	) {
 		return INVALID_MOVE;
 	}
-	G.players[ctx.currentPlayer][slotIndex] = G.currentCard;
+	const player = G.players[ctx.currentPlayer];
+	player.slots[slotIndex] = G.currentCard;
 
+	let placeValueIndex = player.slots.length - slotIndex;
+	let placeValue = 1;
+	for (let i = 0; i <= placeValueIndex; i++) {
+		placeValue *= 10;
+	}
+
+	player.score += G.currentCard.value * placeValue;
 	G.currentCard = null;
 	ctx.events.endTurn();
 }

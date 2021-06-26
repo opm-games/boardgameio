@@ -13,39 +13,21 @@ export const PlaceValues = {
 		return G;
 	},
 	playerView: (G, ctx, playerId) => {
+		const player = G.players[playerId];
+		if (player.isTeacher) return G;
 		return { currentCard: G.currentCard, players: { [playerId]: G.players[playerId] } };
 	},
 	endIf: (G) => {
-		const isEnd = Object.values(G.players).every((hand) => {
-			return hand.every((position) => {
+		const isEnd = Object.values(G.players).every((player) => {
+			return player.slots.every((position) => {
 				return !!position;
 			});
 		});
 		if (isEnd) {
-			const totals = Object.keys(G.players).map((id) => {
-				const hand = G.players[id];
-				let total = 0;
-				let placeValue = "1";
-				for (let i = hand.length - 1; i >= 0; i--) {
-					placeValue = Number.parseInt(placeValue, 10);
-
-					const card = hand[i];
-					total += card.value * placeValue;
-					placeValue = placeValue.toString() + "0";
-				}
-				return { id, total };
-			});
-			const winner = { id: null, total: 0 };
-			totals.forEach((playerTotal) => {
-				if (winner.total < playerTotal.total) {
-					winner.id = playerTotal.id;
-					winner.total = playerTotal.total;
-				}
-			});
-
 			return {
-				winner,
-				totals,
+				winningScore: Object.values(G.players).reduce(function (a, b) {
+					return Math.max(a.score, b.score);
+				}),
 			};
 		}
 	},
@@ -70,11 +52,12 @@ export const PlaceValues = {
 };
 
 function getHands(ctx) {
-	const hands = {};
+	const players = {};
 	ctx.playOrder.forEach((id) => {
-		hands[id] = Array(placeValueSlots).fill(null);
+		const slots = Array(placeValueSlots).fill(null);
+		players[id] = new Player(id, slots, false);
 	});
-	return hands;
+	return players;
 }
 function shuffle(deck) {
 	for (let i = deck.length - 1; i > 0; i--) {
@@ -95,10 +78,19 @@ function getDeck() {
 	return deck;
 }
 
-function Card(value, suit) {
+function Player(id, slots, isTeacher) {
+	return {
+		id,
+		slots,
+		isTeacher,
+		score: 0,
+	};
+}
+
+function Card(value, suit, hidden) {
 	return {
 		value,
 		suit,
-		hidden: true,
+		hidden: hidden === undefined ? false : true,
 	};
 }
