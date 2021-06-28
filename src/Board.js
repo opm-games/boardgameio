@@ -1,5 +1,4 @@
 import React from "react";
-import { placeValueSlots } from "./constants";
 import Card from "./Card";
 import suits from "./res/images";
 import "./styles.css";
@@ -32,11 +31,13 @@ export class PlaceValuesBoard extends React.Component {
 		return (
 			<div>
 				Scores:
-				{gameover.totals.map((total, index) => {
+				{Object.values(this.props.G.players).map((player) => {
 					return (
-						<div key={index} className={total.id === gameover.winner.id ? "bold" : ""}>
+						<div
+							key={player.id}
+							className={player.score === gameover.winningScore ? "bold" : ""}>
 							<span>
-								Player {total.id}: {total.total}
+								Player {player.id}: {player.score}
 							</span>
 						</div>
 					);
@@ -47,20 +48,22 @@ export class PlaceValuesBoard extends React.Component {
 
 	getPlayers() {
 		const players = [];
-		const playOrder = this.props.ctx.playOrder;
-		playOrder.forEach((playerId) => {
+
+		Object.values(this.props.G.players).forEach((player) => {
 			const playerSlots = [];
-			for (let slotI = 0; slotI < placeValueSlots; slotI++) {
-				const cardAtSlot = this.props.G.hands[playerId][slotI];
+
+			for (let slotI = 0; slotI < player.slots.length; slotI++) {
+				const cardAtSlot = player.slots[slotI];
 				playerSlots.push(
 					<Card
+						keyId={slotI}
 						suit={this.getSVGForSuit(cardAtSlot && cardAtSlot.suit)}
 						value={cardAtSlot && cardAtSlot.value}
-						onClickCallback={() => this.onPlaceCard(playerId, slotI)}
+						onClickCallback={() => this.onPlaceCard(player.id, slotI)}
 					/>
 				);
 			}
-			players.push(playerSlots);
+			players.push({ id: player.id, playerSlots });
 		});
 		return players;
 	}
@@ -98,11 +101,11 @@ export class PlaceValuesBoard extends React.Component {
 				{/* player area */}
 
 				<div>
-					{players.map((player, i) => {
+					{players.map((player) => {
 						return (
-							<div key={i} className="player-slots">
-								<div style={{ marginRight: "5px" }}>Player: {i}</div>
-								{player}
+							<div key={player.id} className="player-slots">
+								<div style={{ marginRight: "5px" }}>Player: {player.id}</div>
+								{player.playerSlots}
 							</div>
 						);
 					})}
