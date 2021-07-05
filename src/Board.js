@@ -101,6 +101,7 @@ export class PlaceValuesBoard extends React.Component {
 				{/* player area */}
 
 				<div>
+					{/* map maps to each array index */}
 					{players.map((player) => {
 						return (
 							<div key={player.id} className="player-slots">

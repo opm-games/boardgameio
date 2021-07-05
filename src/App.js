@@ -3,11 +3,13 @@ import { Client } from "boardgame.io/react";
 import { SocketIO } from "boardgame.io/multiplayer";
 
 import { PlaceValues } from "./Game";
+import { ToGold } from "./GameToGold";
+
 import { PlaceValuesBoard } from "./Board";
 import "./styles.css";
 
 const PlaceValuesClient = Client({
-	game: PlaceValues,
+	game: ToGold,
 	board: PlaceValuesBoard,
 	numPlayers: 2,
 	multiplayer: SocketIO({ server: "localhost:8080" }),
